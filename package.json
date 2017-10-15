@@ -1,0 +1,17 @@
+{
+  "name": "local",
+  "version": "1.0.0",
+  "description": "tmp",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Info: No test specified\"",
+    "main": "node dist/main.js"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@types/node": "^8.0.32",
+    "@types/ws": "^3.2.0",
+    "ws": "^3.2.0"
+  }
+}
