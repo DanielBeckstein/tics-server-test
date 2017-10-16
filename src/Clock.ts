@@ -1,42 +1,30 @@
- 
-   function toInt(val:number){
-      return parseInt( val.toString(), 10 )
-   }
    
    export class Clock {
 
       constructor() {  
       }
-   
+      
       now(): number{
 
-            // bug - do these transformations take too much time?, evaluate it by running 1000 loops
+            let now = process.hrtime()
             
-            let hrt = process.hrtime()
+            let seconds = now[0]
+            let seconds_to_us = seconds*(1000*1000)
             
-            let hrt_seconds = hrt[0]
+            let ns = now[1]
+            let us = Math.floor( ns / 1000 )
             
-            let hrt_ns = hrt[1]
-            let hrt_us = hrt_ns / 1000
-            
-            hrt_us = Math.round( Math.floor( hrt_us ) )
-            
-            let seconds_to_us = hrt_seconds*(1000*1000)
-            
-            let us:number
-            us = seconds_to_us+hrt_us
-            us = toInt(us)
+            us += seconds_to_us 
+            us = parseInt(us.toString(),10)
             
             return us
             
+            // bug - do these transformations take too much time?, evaluate it by running 1000 loops
             // bug - in ~200 years us will be > Number.MAX_SAFE_INTEGER
             // bug - hrtime is not seconds of year !!, just arbitrary point in the past
-            // console.log(hrt_seconds)
          
-      }
-      
+      }   
    }
-   
    
    // https://nodejs.org/api/process.html#process_process_hrtime
    // bug - linux server is not .bat base, so node abort scritp is not working 
