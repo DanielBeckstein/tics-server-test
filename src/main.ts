@@ -1,12 +1,9 @@
 
       'use strict';
-      
+
       import * as WebSocket from "ws"
       
-      // import {Timer} from "./Timer"
       import {Clock} from "./Clock"
-
-      var line = " -------------------------------------------------------------";
       
       class Server{
          
@@ -26,40 +23,45 @@
          }
          
          initListen(){
-                  
-            this.ws.on('connection', (ws:any,req:any) => {
+             this.ws.on('connection', (ws: any, req: any) => {
 
-               let _req : any;
-               _req = req;
+                  this.logIpAdress(req);
 
-               const ip = _req.connection.remoteAddress;
-               console.log("ip-address ",ip);
+                  ws.on('message', (payload: any) => {
 
-               ws.on('message', (payload:any) => {
-                  let gmsg;
-                  try {
-                     let msg = JSON.parse(""+payload);
-                     gmsg = msg;
-                     // console.log(payload,"message",msg);
-                     
-                        msg["server"]["now"] = this.clock.now();
-                        // fn(msg);
-                     let resp = JSON.stringify(msg, null, 3);
-                     if(0==1*1){
-                        console.log("resp",resp.slice(0,100));
+                     try {                     
+                         let resp = this.makeResponse(payload);
+                         ws.send(resp);
+                         
+                     } catch (e) {
+                         console.error("ERROR", e.message);
+                         console.error("payload", payload);
                      }
-                     ws.send(resp);
-                     
-                  } catch (e) {
-                     console.error("ERROR",e.message);
-                     console.error("msg",gmsg);
-                  }
-               });
+                  });
             });
          }
          
+         makeResponse(payload:any){
+            
+            let msg = JSON.parse("" + payload);
+            // console.log(payload,"message",msg);
+            
+            msg["server"]["now"] = this.clock.now();
+            // fn(msg);
+
+            let resp = JSON.stringify(msg);
+            // let resp = JSON.stringify(msg, null, 3);
+            // console.log(resp);
+
+            return resp;
+         }
+         
+         logIpAdress(req:any){
+            const ip = req.connection.remoteAddress;
+            console.log("ip-address ", ip);
+         }
+         
       }
-      
       
       let port = 3000;
 
